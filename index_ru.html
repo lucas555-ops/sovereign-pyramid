@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>The Sovereign Pyramid — Чистая ончейн‑иерархия</title>
+  <meta name="description" content="Sovereign Pyramid — опслесс, правил‑ориентированный ончейн‑реферальный движок: лидерский пул, мудрецы, мини‑матрица 3×3, вход 1 ETH."/>
+  <meta property="og:title" content="The Sovereign Pyramid — Чистая ончейн‑иерархия"/>
+  <meta property="og:description" content="Опслесс‑протокол распределения ETH: лидерские пулы, сэйдж‑стипендия, 1 ETH вход."/>
+  <meta property="og:type" content="website"/>
+  <meta name="theme-color" content="#0ea5e9"/>
+  <link rel="alternate" href="index.html" hreflang="en"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { display: ['Space Grotesk', 'ui-sans-serif', 'system-ui'], body: ['Inter','ui-sans-serif'] },
+          colors: {
+            bg: { light: '#0b1220', dark: '#05080f' },
+            glass: 'rgba(255,255,255,0.06)',
+            neon: '#22d3ee',
+            brand: { 50:'#edfff9',100:'#cafff0',200:'#96ffe4',300:'#5ff7d6',400:'#2ee6c5',500:'#0ec7aa',600:'#06a08a',700:'#067f70',800:'#07655c',900:'#0a524d' }
+          },
+          boxShadow: { glow: '0 0 30px rgba(34, 211, 238, .35)', card: '0 12px 40px rgba(0,0,0,.35)' },
+          backdropBlur: { xs: '2px' }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { --ring: 0 0 0 2px rgba(34,211,238,.6); }
+    .glass { background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(10px); }
+    .dot { width:6px;height:6px;border-radius:50%;display:inline-block; }
+    .gradient-text { background: linear-gradient(90deg,#60a5fa,#22d3ee,#34d399,#a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .btn { position:relative; overflow:hidden; }
+    .btn::after { content:''; position:absolute; inset:auto -20% 0; height:120%; transform:translateX(-120%) rotate(8deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent); transition: transform .7s ease; }
+    .btn:hover::after { transform: translateX(120%) rotate(8deg); }
+    .shimmer { background: linear-gradient(110deg, rgba(255,255,255,.08) 8%, rgba(255,255,255,.18) 18%, rgba(255,255,255,.08) 33%); background-size: 200% 100%; animation: shimmer 2.2s linear infinite; }
+    @keyframes shimmer { to { background-position-x: -200%; } }
+    .nav-blur { backdrop-filter: blur(8px); background: rgba(10,15,25,.45); border-bottom: 1px solid rgba(255,255,255,.08) }
+    .tilt { will-change: transform; transform-style: preserve-3d; }
+    .tilt > * { transform: translateZ(24px); }
+  </style>
+  <!-- Effects libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+</head>
+<body class="bg-bg-dark text-white font-body">
+  <div id="vanta" class="fixed inset-0 -z-10"></div>
+  <script>
+    window.addEventListener('load', ()=>{
+      VANTA.NET({ el: '#vanta', color: 0x22d3ee, backgroundColor: 0x05080f, points: 10.0, maxDistance: 22.0, spacing: 15.0, showDots: true });
+    })
+  </script>
+
+  <!-- NAV -->
+  <header class="sticky top-0 z-40 nav-blur">
+    <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="#home" class="font-display text-xl tracking-tight gradient-text">Sovereign&nbsp;Pyramid</a>
+      <div class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#overview" class="hover:text-cyan-300">Обзор</a>
+        <a href="#features" class="hover:text-cyan-300">Возможности</a>
+        <a href="#stats" class="hover:text-cyan-300">Статистика</a>
+        <a href="#architecture" class="hover:text-cyan-300">Архитектура</a>
+        <a href="#docs" class="hover:text-cyan-300">Документация</a>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="themeToggle" class="btn px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15">Тема</button>
+        <a href="#launch" class="btn px-3 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-400 text-black font-semibold shadow-glow">Запустить DApp</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section id="home" class="relative">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="uppercase tracking-[0.35em] text-xs text-white/60">Чистая ончейн‑иерархия</p>
+          <h1 class="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl leading-tight">
+            The <span class="gradient-text">Sovereign Pyramid</span><br/>
+            Opsless. Прозрачно. Беспощадная математика.
+          </h1>
+          <p class="mt-5 text-white/80 max-w-xl">Фиксированный вход 1 ETH, пять уровней аплайна, ежедневный лидерский пул, стипендия мудрецов, мини‑матрица 3×3. Никаких обещаний. Только правила.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#docs" class="btn bg-white/10 hover:bg-white/20 border border-white/15 rounded-xl px-5 py-3">Читать вайтпейпер</a>
+            <a href="#stats" class="btn bg-brand-500 hover:bg-brand-400 text-black rounded-xl px-5 py-3 font-semibold shadow-glow">Смотреть статистику</a>
+          </div>
+          <div class="mt-8 flex flex-wrap gap-2 text-xs">
+            <span class="glass rounded-full px-3 py-1 inline-flex items-center gap-2"><span class="dot bg-emerald-400"></span> Opsless</span>
+            <span class="glass rounded-full px-3 py-1 inline-flex items-center gap-2"><span class="dot bg-cyan-400"></span> Вход 1 ETH</span>
+            <span class="glass rounded-full px-3 py-1 inline-flex items-center gap-2"><span class="dot bg-fuchsia-400"></span> Ончейн‑события</span>
+            <span class="glass rounded-full px-3 py-1 inline-flex items-center gap-2"><span class="dot bg-amber-400"></span> Subgraph готов</span>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="tilt glass rounded-3xl p-6 shadow-card">
+            <div class="p-6 rounded-2xl shimmer"></div>
+            <div class="absolute -inset-1 rounded-3xl pointer-events-none" style="box-shadow:0 0 120px rgba(34,211,238,.25);"></div>
+            <div class="mt-6 grid grid-cols-2 gap-4 text-sm">
+              <div class="glass rounded-2xl p-4">
+                <div class="text-white/60">Сожжено всего</div>
+                <div id="statBurn" class="mt-1 font-display text-2xl">—</div>
+              </div>
+              <div class="glass rounded-2xl p-4">
+                <div class="text-white/60">Депозиты</div>
+                <div id="statDeposits" class="mt-1 font-display text-2xl">—</div>
+              </div>
+              <div class="glass rounded-2xl p-4 col-span-2">
+                <div class="text-white/60">Последние победители</div>
+                <div id="statWinners" class="mt-1 font-mono text-sm">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section id="overview" class="relative py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="glass rounded-3xl p-6">
+          <h3 class="font-display text-xl">Реферальный движок 1 ETH</h3>
+          <p class="mt-2 text-white/70">Фиксированный вход. 1% сжигание на <code>0x000...dEaD</code>. Доля аплайна распределяется по 5 уровням с безопасной по газу отправкой и резервным фоллбеком.</p>
+        </div>
+        <div class="glass rounded-3xl p-6">
+          <h3 class="font-display text-xl">Лидерский пул</h3>
+          <p class="mt-2 text-white/70">30% дневного баланса — топ‑3 рефералам. Кэрри накапливается. Сеттлер получает вознаграждение с потолком.</p>
+        </div>
+        <div class="glass rounded-3xl p-6">
+          <h3 class="font-display text-xl">Sages & Stipend</h3>
+          <p class="mt-2 text-white/70">50+ прямых — статус Sage. Ежемесячная стипендия (равная/взвешенная) из inflow. Permissionless‑сеттеры.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="relative py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl">Почему лендинг «дышит»</h2>
+      <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="tilt glass rounded-3xl p-6">
+          <h4 class="font-semibold">Opsless режим</h4>
+          <p class="text-white/70 mt-1">Никакой кастодиальной казны. Награды разработчиков — по правилам протокола (settler‑стиль).</p>
+        </div>
+        <div class="tilt glass rounded-3xl p-6">
+          <h4 class="font-semibold">Эволюция эпох</h4>
+          <p class="text-white/70 mt-1">Динамические доли на этапах роста для долговечности.</p>
+        </div>
+        <div class="tilt glass rounded-3xl p-6">
+          <h4 class="font-semibold">Газ‑осознанные выплаты</h4>
+          <p class="text-white/70 mt-1">uplineGasLimit, резервные перераспределения, события ошибок для мониторинга.</p>
+        </div>
+        <div class="tilt glass rounded-3xl p-6">
+          <h4 class="font-semibold">Мини‑матрица 3×3</h4>
+          <p class="text-white/70 mt-1">Доступ при ≥5 директов. Частичные выплаты не дают системе «застыть».</p>
+        </div>
+        <div class="tilt glass rounded-3xl p-6">
+          <h4 class="font-semibold">Открытый субграф</h4>
+          <p class="text-white/70 mt-1">Сжигание, депозиты, победители, выплаты резерва — всё индексируется.</p>
+        </div>
+        <div class="tilt glass rounded-3xl p-6">
+          <h4 class="font-semibold">Минимальная поверхность</h4>
+          <p class="text-white/70 mt-1">Одна функция депозита, одна — симуляции; остальное — события.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE STATS -->
+  <section id="stats" class="relative py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between gap-6 flex-wrap">
+        <div>
+          <h2 class="font-display text-3xl">Живая статистика (Subgraph)</h2>
+          <p class="text-white/70">Вставьте ссылку на свой сабграф и имя репозитория — страница подгрузит данные.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <input id="subgraphUrl" class="glass rounded-xl px-3 py-2 w-80" placeholder="https://api.thegraph.com/subgraphs/name/you/sp"/>
+          <input id="repoName" class="glass rounded-xl px-3 py-2 w-72" placeholder="owner/repo (для звёзд GitHub)"/>
+          <button id="btnLoad" class="btn bg-brand-500 hover:bg-brand-400 text-black font-semibold rounded-xl px-4 py-2">Загрузить</button>
+        </div>
+      </div>
+
+      <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="glass rounded-3xl p-6">
+          <div class="text-white/60">Звёзды GitHub</div>
+          <div id="statStars" class="mt-1 font-display text-3xl">—</div>
+        </div>
+        <div class="glass rounded-3xl p-6">
+          <div class="text-white/60">Всего депозитов (шт.)</div>
+          <div id="statDepCount" class="mt-1 font-display text-3xl">—</div>
+        </div>
+        <div class="glass rounded-3xl p-6">
+          <div class="text-white/60">Сожжено (ETH)</div>
+          <div id="statBurnEth" class="mt-1 font-display text-3xl">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section id="architecture" class="relative py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl">Архитектура (высокий уровень)</h2>
+      <div class="mt-8 glass rounded-3xl p-6 overflow-hidden">
+        <svg viewBox="0 0 900 380" class="w-full">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1">
+              <stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#60a5fa"/>
+            </linearGradient>
+          </defs>
+          <rect x="10" y="10" width="880" height="360" rx="24" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.08)"/>
+          <g>
+            <rect x="390" y="70" width="120" height="60" rx="12" fill="url(#g1)" opacity=".85"/>
+            <text x="450" y="105" text-anchor="middle" font-size="14" fill="#021015" font-weight="700">Engine</text>
+          </g>
+          <g>
+            <rect x="170" y="210" width="160" height="60" rx="12" fill="rgba(34,211,238,.25)"/>
+            <text x="250" y="245" text-anchor="middle" font-size="13" fill="#dff">LeaderPool</text>
+            <rect x="570" y="210" width="160" height="60" rx="12" fill="rgba(34,211,238,.25)"/>
+            <text x="650" y="245" text-anchor="middle" font-size="13" fill="#dff">ReserveVault</text>
+          </g>
+          <g stroke="#22d3ee" stroke-width="2" opacity=".9">
+            <path d="M450 130 L450 210"/>
+            <path d="M390 100 L250 100 L250 210"/>
+            <path d="M510 100 L650 100 L650 210"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOCS & CTA -->
+  <section id="docs" class="relative py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-8 items-center">
+        <div class="glass rounded-3xl p-8">
+          <h3 class="font-display text-2xl">Вайтпейпер</h3>
+          <p class="mt-2 text-white/70">Правила, риски и философия Sovereign Pyramid.</p>
+          <ul class="mt-4 list-disc pl-6 text-white/70 space-y-1">
+            <li>Иллюзия вечности (эпохи и резервы)</li>
+            <li>Вечная доля Sage</li>
+            <li>Великое сжигание (1%)</li>
+            <li>Мини‑матрица 3×3</li>
+          </ul>
+          <a href="#launch" class="mt-6 inline-block btn bg-brand-500 hover:bg-brand-400 text-black font-semibold rounded-xl px-5 py-3">Запустить DApp</a>
+        </div>
+        <div class="glass rounded-3xl p-8">
+          <h3 class="font-display text-2xl">Дисклеймер</h3>
+          <p class="mt-2 text-white/70">Высокий риск. Распределение по правилам. Нет ожиданий прибыли от чужих усилий. Самокастодия. Ончейн‑прозрачность.</p>
+          <p class="mt-4 text-white/50 text-sm">Это презентационная страница ончейн‑эксперимента. Понимайте правила, прежде чем играть.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-10 border-t border-white/10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm flex flex-wrap items-center justify-between gap-4">
+      <div class="text-white/60">© <span id="year"></span> Sovereign Pyramid</div>
+      <div id="starBadge" class="glass rounded-full px-3 py-1.5">★ —</div>
+    </div>
+  </footer>
+
+  <script>
+    // Тема
+    document.getElementById('themeToggle')?.addEventListener('click',()=>{
+      document.documentElement.classList.toggle('dark');
+    })
+    // Tilt
+    VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 8, speed: 400, glare: true, 'max-glare': .2 })
+    // Год
+    document.getElementById('year').textContent = new Date().getFullYear()
+    // Герой‑анимация
+    gsap.from('h1 .gradient-text', { duration: 1.2, ease: 'power3.out', yPercent: 20, opacity: 0 })
+
+    // Утилиты
+    const $ = (id)=>document.getElementById(id)
+    const formatETH = (wei)=> (Number(wei||0)/1e18).toLocaleString('ru-RU',{maximumFractionDigits:3})
+
+    // Подгрузка
+    async function hydrate(){
+      const sg = $('subgraphUrl').value.trim()
+      const repo = $('repoName').value.trim()
+      if (repo) {
+        try { const r = await fetch(`https://api.github.com/repos/${repo}`); const j = await r.json(); if (j && j.stargazers_count!=null) { $('statStars').textContent=j.stargazers_count; $('starBadge').textContent = `★ ${j.stargazers_count} звёзд`; } } catch(e){}
+      }
+      if (!sg) return
+      const q = (query)=> fetch(sg, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({query}) }).then(r=>r.json())
+      try {
+        const dep = await q(`{ deposits: deposits(first: 1, orderBy: ts, orderDirection: desc){ burn } deposits_agg: deposits(first: 1000){ id } winners: dailyWinners(first:1, orderBy: day, orderDirection: desc){ a1 a2 a3 each } }`)
+        const burns = dep?.data?.deposits?.reduce((a,b)=>a+Number(b.burn),0)||0
+        const depCount = dep?.data?.deposits_agg?.length || 0
+        $('statBurn').textContent = (burns/1e18).toFixed(3) + ' ETH'
+        $('statBurnEth').textContent = (burns/1e18).toFixed(3)
+        $('statDeposits').textContent = depCount
+        $('statDepCount').textContent = depCount
+        const w = dep?.data?.winners?.[0]
+        if (w) $('statWinners').textContent = `${w.a1?.slice(0,6)} • ${w.a2?.slice(0,6)} • ${w.a3?.slice(0,6)} — по ${formatETH(w.each)} ETH`
+      } catch(e) { console.warn('subgraph error', e) }
+    }
+    document.getElementById('btnLoad').addEventListener('click', hydrate)
+  </script>
+</body>
+</html>
