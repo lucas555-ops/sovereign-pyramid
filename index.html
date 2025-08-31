@@ -4,23 +4,21 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>The Sovereign Pyramid — Pure On‑Chain Hierarchy</title>
-  <meta name="description" content="Sovereign Pyramid — a rules‑based, opsless, pure on‑chain referral engine with leader pools, sages, and a 1 ETH entry."/>
+  <meta name="description" content="Sovereign Pyramid — a rules‑based, opsless, pure on‑chain referral engine with leader pools, sages, mini 3×3 matrix, and a 1 ETH entry."/>
+
   <!-- Open Graph / Twitter Preview -->
   <meta property="og:type" content="website"/>
   <meta property="og:title" content="Sovereign Pyramid — Pure On‑Chain Hierarchy"/>
-  <meta property="og:description" content="Rules‑based, opsless, on‑chain referral engine with leader pools, sages, and a 1 ETH entry."/>
+  <meta property="og:description" content="Rules‑based, opsless on‑chain referral engine with leader pools, sages, and a 1 ETH entry."/>
   <meta property="og:image" content="og.png"/>
   <meta property="og:image:type" content="image/png"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-  <meta property="og:locale" content="en_US"/>
-  <meta property="og:locale:alternate" content="ru_RU"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Sovereign Pyramid — Pure On‑Chain Hierarchy"/>
-  <meta name="twitter:description" content="Rules‑based, opsless, on‑chain referral engine with leader pools, sages, and a 1 ETH entry."/>
   <meta name="twitter:image" content="og.png"/>
-  <link rel="image_src" href="og.png"/>
   <meta name="theme-color" content="#0ea5e9"/>
+
+  <!-- Fonts & Tailwind -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -30,15 +28,16 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { display: ['Space Grotesk', 'ui-sans-serif', 'system-ui'], body: ['Inter','ui-sans-serif'] },
+          fontFamily: { display: ['Space Grotesk','ui-sans-serif','system-ui'], body: ['Inter','ui-sans-serif'] },
           colors: {
-            bg: { light: '#0b1220', dark: '#05080f' },
+            bg: { dark: '#05080f' },
             glass: 'rgba(255,255,255,0.06)',
-            neon: '#22d3ee',
-            brand: { 50:'#edfff9',100:'#cafff0',200:'#96ffe4',300:'#5ff7d6',400:'#2ee6c5',500:'#0ec7aa',600:'#06a08a',700:'#067f70',800:'#07655c',900:'#0a524d' }
+            brand: { 400:'#2ee6c5', 500:'#0ec7aa' }
           },
-          boxShadow: { glow: '0 0 30px rgba(34, 211, 238, .35)', card: '0 12px 40px rgba(0,0,0,.35)' },
-          backdropBlur: { xs: '2px' }
+          boxShadow: {
+            glow: '0 0 30px rgba(34,211,238,.35)',
+            card: '0 12px 40px rgba(0,0,0,.35)'
+          }
         }
       }
     }
@@ -56,6 +55,7 @@
     .nav-blur { backdrop-filter: blur(8px); background: rgba(10,15,25,.45); border-bottom: 1px solid rgba(255,255,255,.08) }
     .tilt { will-change: transform; transform-style: preserve-3d; }
     .tilt > * { transform: translateZ(24px); }
+
     /* Background softening */
     #vanta{opacity:.6;filter:saturate(.7) brightness(.85) contrast(.95)}
     .bg-overlay{background:
@@ -64,7 +64,19 @@
       linear-gradient(180deg, rgba(5,8,15,.65), rgba(5,8,15,.9))}
     @media (max-width: 768px){#vanta{opacity:.5}}
     @media (prefers-reduced-motion: reduce){#vanta{opacity:.45;filter:saturate(.6) brightness(.8)}}
+
+    /* Architecture styles */
+    .progress{height:10px;border-radius:9999px;background:rgba(255,255,255,.08);overflow:hidden}
+    .fill{height:100%;border-radius:9999px;box-shadow:0 0 18px rgba(34,211,238,.25);transition:width .6s ease}
+    .fill-upline{background:linear-gradient(90deg,#22d3ee,#60a5fa)}
+    .fill-leader{background:linear-gradient(90deg,#34d399,#22d3ee)}
+    .fill-reserve{background:linear-gradient(90deg,#a78bfa,#60a5fa)}
+    .fill-ops{background:linear-gradient(90deg,#eab308,#22d3ee)}
+    .flow-line{stroke-dasharray:8 14;animation:dash 3s linear infinite}
+    .flow-line.slow{animation-duration:4.5s}
+    @keyframes dash{to{stroke-dashoffset:-180}}
   </style>
+
   <!-- Effects libs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -72,6 +84,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
 </head>
 <body class="bg-bg-dark text-white font-body">
+  <!-- Background -->
   <div id="vanta" class="fixed inset-0 -z-10"></div>
   <div id="bgOverlay" class="bg-overlay fixed inset-0 -z-5 pointer-events-none"></div>
   <script>
@@ -201,69 +214,87 @@
     </div>
   </section>
 
-  <!-- LIVE STATS -->
-  <section id="stats" class="relative py-20">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex items-end justify-between gap-6 flex-wrap">
-        <div>
-          <h2 class="font-display text-3xl" data-i18n="stats.title">Live Stats (via Subgraph)</h2>
-          <p class="text-white/70" data-i18n="stats.hint">Paste your subgraph endpoint and repo to hydrate the page.</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <input id="subgraphUrl" class="glass rounded-xl px-3 py-2 w-80" placeholder="https://api.thegraph.com/subgraphs/name/you/sp"/>
-          <input id="repoName" class="glass rounded-xl px-3 py-2 w-72" placeholder="owner/repo (for GitHub stars)"/>
-          <button id="btnLoad" class="btn bg-brand-500 hover:bg-brand-400 text-black font-semibold rounded-xl px-4 py-2" data-i18n="stats.load">Load</button>
-        </div>
-      </div>
-
-      <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="glass rounded-3xl p-6">
-          <div class="text-white/60" data-i18n="stats.gh">GitHub Stars</div>
-          <div id="statStars" class="mt-1 font-display text-3xl">—</div>
-        </div>
-        <div class="glass rounded-3xl p-6">
-          <div class="text-white/60" data-i18n="stats.depCount">Total Deposits (count)</div>
-          <div id="statDepCount" class="mt-1 font-display text-3xl">—</div>
-        </div>
-        <div class="glass rounded-3xl p-6">
-          <div class="text-white/60" data-i18n="stats.burnEth">Burned (ETH)</div>
-          <div id="statBurnEth" class="mt-1 font-display text-3xl">—</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ARCHITECTURE -->
+  <!-- ARCHITECTURE (Interactive) -->
   <section id="architecture" class="relative py-20">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <h2 class="font-display text-3xl" data-i18n="arch.title">Architecture (high‑level)</h2>
-      <div class="mt-8 glass rounded-3xl p-6 overflow-hidden">
-        <svg viewBox="0 0 900 380" class="w-full">
-          <defs>
-            <linearGradient id="g1" x1="0" x2="1">
-              <stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#60a5fa"/>
-            </linearGradient>
-          </defs>
-          <rect x="10" y="10" width="880" height="360" rx="24" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.08)"/>
-          <!-- Engine -->
-          <g>
-            <rect x="390" y="70" width="120" height="60" rx="12" fill="url(#g1)" opacity=".85"/>
-            <text x="450" y="105" text-anchor="middle" font-size="14" fill="#021015" font-weight="700">Engine</text>
-          </g>
-          <!-- Pools -->
-          <g>
-            <rect x="170" y="210" width="160" height="60" rx="12" fill="rgba(34,211,238,.25)"/>
-            <text x="250" y="245" text-anchor="middle" font-size="13" fill="#dff">LeaderPool</text>
-            <rect x="570" y="210" width="160" height="60" rx="12" fill="rgba(34,211,238,.25)"/>
-            <text x="650" y="245" text-anchor="middle" font-size="13" fill="#dff">ReserveVault</text>
-          </g>
-          <!-- Arrows -->
-          <g stroke="#22d3ee" stroke-width="2" opacity=".9">
-            <path d="M450 130 L450 210"/>
-            <path d="M390 100 L250 100 L250 210"/>
-            <path d="M510 100 L650 100 L650 210"/>
-          </g>
-        </svg>
+      <div class="flex items-center justify-between gap-4 flex-wrap">
+        <h2 class="font-display text-3xl" data-i18n="arch.title">Architecture (high‑level)</h2>
+        <div class="glass rounded-full p-1 flex items-center gap-1">
+          <button id="epPioneer" class="px-3 py-1.5 text-sm rounded-full">Pioneer</button>
+          <button id="epGrowth" class="px-3 py-1.5 text-sm rounded-full">Growth</button>
+          <button id="epSovereign" class="px-3 py-1.5 text-sm rounded-full">Sovereign</button>
+        </div>
+      </div>
+
+      <div class="mt-8 grid lg:grid-cols-2 gap-8 items-start">
+        <!-- Diagram -->
+        <div class="glass rounded-3xl p-6 overflow-hidden">
+          <svg viewBox="0 0 860 420" class="w-full" role="img" aria-label="Protocol flow diagram">
+            <defs>
+              <linearGradient id="gradUpline" x1="0" x2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#60a5fa"/></linearGradient>
+              <linearGradient id="gradLeader" x1="0" x2="1"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#22d3ee"/></linearGradient>
+              <linearGradient id="gradReserve" x1="0" x2="1"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#60a5fa"/></linearGradient>
+              <linearGradient id="gradOps" x1="0" x2="1"><stop offset="0%" stop-color="#eab308"/><stop offset="100%" stop-color="#22d3ee"/></linearGradient>
+            </defs>
+
+            <!-- Engine node -->
+            <rect x="360" y="60" width="140" height="56" rx="18" fill="url(#gradUpline)" opacity=".95"/>
+            <text x="430" y="95" text-anchor="middle" font-size="16" font-weight="700" fill="#041016" data-i18n="arch.node.engine">Engine</text>
+
+            <!-- Upline node -->
+            <rect x="370" y="180" width="120" height="46" rx="14" fill="rgba(34,211,238,.18)" stroke="#22d3ee"/>
+            <text x="430" y="208" text-anchor="middle" font-size="14" fill="#dff" data-i18n="arch.node.upline">Upline (5 levels)</text>
+            <text id="amtUplineSvg" x="430" y="228" text-anchor="middle" font-size="12" fill="#9be7ff">—</text>
+
+            <!-- Leader node -->
+            <rect x="110" y="280" width="200" height="56" rx="18" fill="rgba(52,211,153,.18)" stroke="#34d399"/>
+            <text x="210" y="312" text-anchor="middle" font-size="14" fill="#dff" data-i18n="arch.node.leader">LeaderPool</text>
+            <text id="amtLeaderSvg" x="210" y="332" text-anchor="middle" font-size="12" fill="#b6f3d2">—</text>
+
+            <!-- Reserve node -->
+            <rect x="550" y="280" width="200" height="56" rx="18" fill="rgba(167,139,250,.18)" stroke="#a78bfa"/>
+            <text x="650" y="312" text-anchor="middle" font-size="14" fill="#dff" data-i18n="arch.node.reserve">ReserveVault</text>
+            <text id="amtReserveSvg" x="650" y="332" text-anchor="middle" font-size="12" fill="#ddd0ff">—</text>
+
+            <!-- Ops & Burn node -->
+            <rect x="360" y="320" width="140" height="46" rx="14" fill="rgba(234,179,8,.14)" stroke="#eab308"/>
+            <text x="430" y="348" text-anchor="middle" font-size="13" fill="#ffe699" data-i18n="arch.node.opsburn">Ops & Burn</text>
+            <text id="amtOpsSvg" x="430" y="368" text-anchor="middle" font-size="12" fill="#ffe699">—</text>
+
+            <!-- Flows -->
+            <path id="flowUpline" class="flow-line" d="M430 116 L430 180" stroke="url(#gradUpline)" stroke-width="4" fill="none"/>
+            <path id="flowLeader" class="flow-line slow" d="M390 116 L210 116 L210 280" stroke="url(#gradLeader)" stroke-width="4" fill="none"/>
+            <path id="flowReserve" class="flow-line slow" d="M470 116 L650 116 L650 280" stroke="url(#gradReserve)" stroke-width="4" fill="none"/>
+            <path id="flowOps" class="flow-line" d="M430 226 L430 320" stroke="url(#gradOps)" stroke-width="3" fill="none"/>
+          </svg>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="glass rounded-3xl p-6">
+          <div class="flex items-baseline justify-between">
+            <h3 class="font-display text-2xl" data-i18n="arch.break.title">Split of 1 ETH</h3>
+            <span class="text-white/60 text-sm" data-i18n="arch.break.note">Illustrative, rules‑based, not a promise of profit.</span>
+          </div>
+          <div class="mt-6 space-y-4">
+            <div class="stat-row">
+              <div class="flex justify-between text-sm"><span data-i18n="arch.node.upline">Upline (5 levels)</span><span id="vUpline">—</span></div>
+              <div class="progress"><div id="barUpline" class="fill fill-upline" style="width:0%"></div></div>
+            </div>
+            <div class="stat-row">
+              <div class="flex justify-between text-sm"><span data-i18n="arch.node.leader">LeaderPool</span><span id="vLeader">—</span></div>
+              <div class="progress"><div id="barLeader" class="fill fill-leader" style="width:0%"></div></div>
+            </div>
+            <div class="stat-row">
+              <div class="flex justify-between text-sm"><span data-i18n="arch.node.reserve">ReserveVault</span><span id="vReserve">—</span></div>
+              <div class="progress"><div id="barReserve" class="fill fill-reserve" style="width:0%"></div></div>
+            </div>
+            <div class="stat-row">
+              <div class="flex justify-between text-sm"><span data-i18n="arch.node.opsburn">Ops & Burn</span><span id="vOpsBurn">—</span></div>
+              <div class="progress"><div id="barOps" class="fill fill-ops" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="mt-6 text-sm text-white/70"><span data-i18n="arch.deposit1">Deposit</span>: <strong>1 ETH</strong></div>
+        </div>
       </div>
     </div>
   </section>
@@ -300,7 +331,7 @@
   </footer>
 
   <script>
-    // i18n dictionary
+    // ===== i18n dictionary =====
     const I18N = {
       en: {
         brand: 'Sovereign Pyramid',
@@ -311,13 +342,13 @@
         'ov.card1.t':'1 ETH Referral Engine','ov.card1.d':'Fixed entry. 1% burn to 0x000...dEaD. Upline share routed across five levels with gas‑safe payouts and reserve fallback.',
         'ov.card2.t':'Leader Pool','ov.card2.d':'30% of daily balance flows to top‑3 referrers. Carry accumulates. Settlers get capped rewards.',
         'ov.card3.t':'Sages & Stipend','ov.card3.d':'50+ directs → Sage. Monthly stipend (equal/weighted) from inflows. Permissionless settlement.',
-        'feat.title':'Why it feels alive','feat.f1.t':'Opsless mode','feat.f1.d':'No treasury custody. Dev rewards are protocol‑based (settler‑style).',
+        'feat.title':'Living Protocol Dynamics','feat.f1.t':'Opsless mode','feat.f1.d':'No treasury custody. Dev rewards are protocol‑based (settler‑style).',
         'feat.f2.t':'Epoch evolution','feat.f2.d':'Dynamic shares across growth stages to improve longevity.',
         'feat.f3.t':'Gas‑aware payouts','feat.f3.d':'uplineGasLimit, reserve reroutes, failure events for monitoring.',
         'feat.f4.t':'Mini Matrix 3×3','feat.f4.d':'Eligible with ≥5 directs. Partial payouts prevent stalling.',
         'feat.f5.t':'Open subgraph','feat.f5.d':'Burns, deposits, winners, reserve payouts — all indexed.',
         'feat.f6.t':'Minimal surface','feat.f6.d':'One deposit fn, one simulation fn; everything else is events.',
-        'arch.title':'Architecture (high‑level)',
+        'arch.title':'Architecture (high‑level)','arch.break.title':'Split of 1 ETH','arch.break.note':'Illustrative, rules‑based, not a promise of profit.','arch.deposit1':'Deposit','arch.node.engine':'Engine','arch.node.leader':'LeaderPool','arch.node.reserve':'ReserveVault','arch.node.upline':'Upline (5 levels)','arch.node.opsburn':'Ops & Burn',
         'docs.title':'Read the Whitepaper','docs.sub':'Rules, risks, and the philosophy behind the Sovereign Pyramid.','docs.l1':'Illusion of Perpetuity (epochs & reserves)','docs.l2':'Sage Eternal Share','docs.l3':'Great Burn (1%)','docs.l4':'Mini Matrix 3×3','docs.cta':'Launch DApp',
         'disc.title':'Disclaimer','disc.body':'High risk. Rules‑based distribution. No expectation of profit from efforts of others. Self‑custody. On‑chain transparency.','disc.note':'This is a presentation page for an on‑chain experiment. Understand the rules before you play.'
       },
@@ -336,30 +367,29 @@
         'feat.f4.t':'Мини‑матрица 3×3','feat.f4.d':'Доступ при ≥5 директов. Частичные выплаты не дают системе «застыть».',
         'feat.f5.t':'Открытый субграф','feat.f5.d':'Сжигание, депозиты, победители, выплаты резерва — всё индексируется.',
         'feat.f6.t':'Минимальная поверхность','feat.f6.d':'Одна функция депозита, одна — симуляции; остальное — события.',
-        'arch.title':'Архитектура (высокий уровень)',
+        'arch.title':'Архитектура (высокий уровень)','arch.break.title':'Распределение 1 ETH','arch.break.note':'Иллюстрация по правилам протокола, не обещание дохода.','arch.deposit1':'Депозит','arch.node.engine':'Engine','arch.node.leader':'LeaderPool','arch.node.reserve':'ReserveVault','arch.node.upline':'Upline (5 уровней)','arch.node.opsburn':'Ops & Burn',
         'docs.title':'Вайтпейпер','docs.sub':'Правила, риски и философия Sovereign Pyramid.','docs.l1':'Иллюзия вечности (эпохи и резервы)','docs.l2':'Вечная доля Sage','docs.l3':'Великое сжигание (1%)','docs.l4':'Мини‑матрица 3×3','docs.cta':'Запустить DApp',
         'disc.title':'Дисклеймер','disc.body':'Высокий риск. Распределение по правилам. Нет ожиданий прибыли от чужих усилий. Самокастодия. Ончейн‑прозрачность.','disc.note':'Это презентационная страница ончейн‑эксперимента. Понимайте правила, прежде чем играть.'
       }
     }
 
+    // ===== UI scripts =====
+    document.getElementById('themeToggle')?.addEventListener('click',()=>{ document.documentElement.classList.toggle('dark') })
+    VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 8, speed: 400, glare: true, 'max-glare': .2 })
+    document.getElementById('year').textContent = new Date().getFullYear()
+    gsap.from('h1 .gradient-text', { duration: 1.2, ease: 'power3.out', yPercent: 20, opacity: 0 })
+
+    // ===== Language init & switch =====
     function setLang(lang){
       const dict = I18N[lang] || I18N.en
       document.documentElement.lang = (lang==='ru'?'ru':'en')
-      // title & description
       document.title = (lang==='ru') ? 'The Sovereign Pyramid — Чистая ончейн‑иерархия' : 'The Sovereign Pyramid — Pure On‑Chain Hierarchy'
       const metaDesc = document.querySelector('meta[name="description"]')
-      if (metaDesc) metaDesc.setAttribute('content', (lang==='ru') ? 'Sovereign Pyramid — опслесс, правил‑ориентированный ончейн‑реферальный движок: лидерский пул, мудрецы, мини‑матрица 3×3, вход 1 ETH.' : 'Sovereign Pyramid — a rules‑based, opsless, pure on‑chain referral engine with leader pools, sages, and a 1 ETH entry.')
-      // labels
-      document.querySelectorAll('[data-i18n]').forEach(el=>{
-        const key = el.getAttribute('data-i18n')
-        if (dict[key] != null) el.textContent = dict[key]
-      })
-      // placeholders
+      if (metaDesc) metaDesc.setAttribute('content', (lang==='ru') ? 'Sovereign Pyramid — опслесс, правил‑ориентированный ончейн‑реферальный движок: лидерский пул, мудрецы, мини‑матрица 3×3, вход 1 ETH.' : 'Sovereign Pyramid — a rules‑based, opsless, pure on‑chain referral engine with leader pools, sages, mini 3×3 matrix, and a 1 ETH entry.')
+      document.querySelectorAll('[data-i18n]').forEach(el=>{ const key=el.getAttribute('data-i18n'); if (dict[key]!=null) el.textContent=dict[key] })
       const sg = document.getElementById('subgraphUrl'); if (sg) sg.placeholder = (lang==='ru') ? 'https://api.thegraph.com/subgraphs/name/you/sp' : 'https://api.thegraph.com/subgraphs/name/you/sp'
       const repo = document.getElementById('repoName'); if (repo) repo.placeholder = (lang==='ru') ? 'owner/repo (для звёзд GitHub)' : 'owner/repo (for GitHub stars)'
-      // number formats
       window.__fmtLocale = (lang==='ru') ? 'ru-RU' : undefined
-      // switch highlight
       const enBtn = document.getElementById('langEN'), ruBtn = document.getElementById('langRU')
       const active = ['bg-brand-500','text-black','shadow-glow']
       const inactive = ['bg-white/10','hover:bg-white/20','text-white/90']
@@ -368,34 +398,20 @@
       else { enBtn.classList.add(...active); ruBtn.classList.add(...inactive); enBtn.setAttribute('aria-current','page'); ruBtn.removeAttribute('aria-current') }
       localStorage.setItem('sp_lang', lang)
     }
-
-    // Theme toggle
-    document.getElementById('themeToggle')?.addEventListener('click',()=>{ document.documentElement.classList.toggle('dark') })
-    // Tilt
-    VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 8, speed: 400, glare: true, 'max-glare': .2 })
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear()
-    // Hero micro‑animation
-    gsap.from('h1 .gradient-text', { duration: 1.2, ease: 'power3.out', yPercent: 20, opacity: 0 })
-
-    // Language init
     const urlLang = new URLSearchParams(location.search).get('lang')
     const savedLang = localStorage.getItem('sp_lang')
-    const initialLang = (urlLang==='ru'||urlLang==='en') ? urlLang : (savedLang||'en')
-    setLang(initialLang)
+    setLang((urlLang==='ru'||urlLang==='en') ? urlLang : (savedLang||'en'))
     document.getElementById('langEN').addEventListener('click', ()=> setLang('en'))
     document.getElementById('langRU').addEventListener('click', ()=> setLang('ru'))
 
-    // Helpers
+    // ===== Live stats hydrate =====
     const $ = (id)=>document.getElementById(id)
     const formatETH = (wei)=> (Number(wei||0)/1e18).toLocaleString(window.__fmtLocale,{maximumFractionDigits:3})
-
-    // Live hydrate
     async function hydrate(){
-      const sg = $('subgraphUrl').value.trim()
-      const repo = $('repoName').value.trim()
+      const sg = $('subgraphUrl')?.value?.trim()
+      const repo = $('repoName')?.value?.trim()
       if (repo) {
-        try { const r = await fetch(`https://api.github.com/repos/${repo}`); const j = await r.json(); if (j && j.stargazers_count!=null) { $('statStars').textContent=j.stargazers_count; $('starBadge').textContent = `★ ${j.stargazers_count} ${document.documentElement.lang==='ru'?'звёзд':'stars'}`; } } catch(e){}
+        try { const r = await fetch(`https://api.github.com/repos/${repo}`); const j = await r.json(); if (j && j.stargazers_count!=null) { $('statStars') && ($('statStars').textContent=j.stargazers_count); $('starBadge').textContent = `★ ${j.stargazers_count} ${document.documentElement.lang==='ru'?'звёзд':'stars'}`; } } catch(e){}
       }
       if (!sg) return
       const q = (query)=> fetch(sg, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({query}) }).then(r=>r.json())
@@ -404,14 +420,56 @@
         const burns = dep?.data?.deposits?.reduce((a,b)=>a+Number(b.burn),0)||0
         const depCount = dep?.data?.deposits_agg?.length || 0
         $('statBurn').textContent = (burns/1e18).toFixed(3) + ' ETH'
-        $('statBurnEth').textContent = (burns/1e18).toFixed(3)
+        $('statBurnEth') && ($('statBurnEth').textContent = (burns/1e18).toFixed(3))
         $('statDeposits').textContent = depCount
-        $('statDepCount').textContent = depCount
+        $('statDepCount') && ($('statDepCount').textContent = depCount)
         const w = dep?.data?.winners?.[0]
         if (w) $('statWinners').textContent = `${w.a1?.slice(0,6)} • ${w.a2?.slice(0,6)} • ${w.a3?.slice(0,6)} — ${document.documentElement.lang==='ru'?'по':''} ${formatETH(w.each)} ETH`
       } catch(e) { console.warn('subgraph error', e) }
     }
-    document.getElementById('btnLoad').addEventListener('click', hydrate)
+    document.getElementById('btnLoad')?.addEventListener('click', hydrate)
+
+    // ===== Architecture dynamic split =====
+    const EPOCHS = {
+      pioneer: { upline:.75, leader:.10, reserve:.10, ops:.05, burn:.01 },
+      growth:  { upline:.70, leader:.12, reserve:.12, ops:.06, burn:.01 },
+      sovereign:{ upline:.65, leader:.15, reserve:.15, ops:.05, burn:.01 }
+    }
+    const epBtns = { pioneer:document.getElementById('epPioneer'), growth:document.getElementById('epGrowth'), sovereign:document.getElementById('epSovereign') }
+    function fmtETH(x){ return `${x.toLocaleString(window.__fmtLocale,{maximumFractionDigits:3})} ETH` }
+    function setEpoch(k){
+      const e = EPOCHS[k] || EPOCHS.pioneer
+      const dep = 1
+      const u = dep*e.upline, l = dep*e.leader, r = dep*e.reserve, o = dep*e.ops, b = dep*e.burn
+      // right panel
+      document.getElementById('vUpline').textContent = `${fmtETH(u)} (${Math.round(e.upline*100)}%)`
+      document.getElementById('vLeader').textContent = `${fmtETH(l)} (${Math.round(e.leader*100)}%)`
+      document.getElementById('vReserve').textContent = `${fmtETH(r)} (${Math.round(e.reserve*100)}%)`
+      document.getElementById('vOpsBurn').textContent = `${fmtETH(o+b)} (${Math.round((e.ops+e.burn)*100)}%)`
+      document.getElementById('barUpline').style.width = `${e.upline*100}%`
+      document.getElementById('barLeader').style.width = `${e.leader*100}%`
+      document.getElementById('barReserve').style.width = `${e.reserve*100}%`
+      document.getElementById('barOps').style.width = `${(e.ops+e.burn)*100}%`
+      // svg captions
+      const amtU = document.getElementById('amtUplineSvg')
+      const amtL = document.getElementById('amtLeaderSvg')
+      const amtR = document.getElementById('amtReserveSvg')
+      const amtO = document.getElementById('amtOpsSvg')
+      amtU.textContent = fmtETH(u)
+      amtL.textContent = fmtETH(l)
+      amtR.textContent = fmtETH(r)
+      amtO.textContent = `${fmtETH(o)} + Burn ${Math.round(e.burn*100)}%`
+      // active states
+      Object.entries(epBtns).forEach(([key,btn])=>{
+        btn.classList.remove('bg-brand-500','text-black','shadow-glow')
+        btn.classList.add('bg-white/10','hover:bg-white/20','text-white/90')
+        if (key===k){ btn.classList.add('bg-brand-500','text-black','shadow-glow'); btn.classList.remove('bg-white/10','hover:bg-white/20','text-white/90') }
+      })
+    }
+    epBtns.pioneer.addEventListener('click', ()=> setEpoch('pioneer'))
+    epBtns.growth.addEventListener('click', ()=> setEpoch('growth'))
+    epBtns.sovereign.addEventListener('click', ()=> setEpoch('sovereign'))
+    setEpoch('pioneer')
   </script>
 </body>
 </html>
