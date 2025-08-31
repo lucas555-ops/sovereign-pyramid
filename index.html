@@ -41,6 +41,14 @@
     .nav-blur { backdrop-filter: blur(8px); background: rgba(10,15,25,.45); border-bottom: 1px solid rgba(255,255,255,.08) }
     .tilt { will-change: transform; transform-style: preserve-3d; }
     .tilt > * { transform: translateZ(24px); }
+    /* Background softening */
+    #vanta{opacity:.6;filter:saturate(.7) brightness(.85) contrast(.95)}
+    .bg-overlay{background:
+      radial-gradient(800px 520px at 65% 15%, rgba(8,12,20,.45), transparent 60%),
+      radial-gradient(900px 640px at 10% 60%, rgba(8,12,20,.35), transparent 60%),
+      linear-gradient(180deg, rgba(5,8,15,.65), rgba(5,8,15,.9))}
+    @media (max-width: 768px){#vanta{opacity:.5}}
+    @media (prefers-reduced-motion: reduce){#vanta{opacity:.45;filter:saturate(.6) brightness(.8)}}
   </style>
   <!-- Effects libs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -50,9 +58,10 @@
 </head>
 <body class="bg-bg-dark text-white font-body">
   <div id="vanta" class="fixed inset-0 -z-10"></div>
+  <div id="bgOverlay" class="bg-overlay fixed inset-0 -z-5 pointer-events-none"></div>
   <script>
     window.addEventListener('load', ()=>{
-      VANTA.NET({ el: '#vanta', color: 0x22d3ee, backgroundColor: 0x05080f, points: 10.0, maxDistance: 22.0, spacing: 15.0, showDots: true });
+      VANTA.NET({ el: '#vanta', color: 0x18a4b9, backgroundColor: 0x05080f, points: 6.0, maxDistance: 16.0, spacing: 22.0, showDots: true });
     })
   </script>
 
