@@ -1,54 +1,98 @@
-<!doctype html>
-<html lang="ru" class="scroll-smooth">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Tokenized Stocks & ETFs Hub — Crypto Onboarding-as-a-Service</title>
-<meta name="description" content="Купи токенизированные акции и ETF через криптовалюту. Онбординг, портфель, сопровождение. Без брокеров — только кошелёк и USDT."/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- Effects libs -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<style>
-:root{ --bg:#0b0e14; --muted:#9aa5b1; --accent:#6ee7b7; --accent-2:#22d3ee; }
-html, body { background: var(--bg); color: #e5e7eb; font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
-/* Cards & buttons */
-.glass { background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(10px); }
-.shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,0.06); }
-.btn-primary { position:relative; overflow:hidden; background: linear-gradient(90deg, var(--accent), var(--accent-2)); color:#041016; font-weight: 800; border-radius:0.75rem; }
-.btn-primary::after{ content:none; }
-.btn-primary:hover::after{ content:none; }
-.chip { border:1px solid rgba(255,255,255,0.12); }
-/* Hero shimmer card */
-.shimmer{background:linear-gradient(110deg, rgba(255,255,255,.08) 8%, rgba(255,255,255,.18) 18%, rgba(255,255,255,.08) 33%);background-size:200% 100%;animation:shimmer 2.2s linear infinite}
-@keyframes shimmer{to{background-position-x:-200%}}
-/* Background overlay (soften Vanta) */
-#vanta{opacity:1;filter:none;will-change:transform}
-.bg-overlay{background:
-radial-gradient(800px 520px at 65% 15%, rgba(8,12,20,.45), transparent 60%),
-radial-gradient(900px 640px at 10% 60%, rgba(8,12,20,.35), transparent 60%),
-linear-gradient(180deg, rgba(5,8,15,.65), rgba(5,8,15,.9))}
-@media (max-width: 768px){#vanta{opacity:.5}}
-@media (prefers-reduced-motion: reduce){#vanta{opacity:.45;filter:saturate(.6) brightness(.8)}}
-/* Nav blur */
-.nav-blur{backdrop-filter: blur(10px); background: rgba(5,8,15,.45); border-bottom:1px solid rgba(255,255,255,.08)}
-section, header, footer{position:relative; z-index:10}
-</style>
-</head>
-<body>
-  <!-- Background layers -->
-  <div id="vanta" class="fixed inset-0 z-10"></div>
-  <div class="bg-overlay fixed inset-0 -z-5 pointer-events-none"></div>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>The Sovereign Pyramid — Pure On‑Chain Hierarchy</title>
+  <meta name="description" content="Sovereign Pyramid — a rules‑based, opsless, pure on‑chain referral engine with leader pools, sages, mini 3×3 matrix, and a 1 ETH entry."/>
+
+  <!-- Open Graph / Twitter Preview -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Sovereign Pyramid — Pure On‑Chain Hierarchy"/>
+  <meta property="og:description" content="Rules‑based, opsless on‑chain referral engine with leader pools, sages, and a 1 ETH entry."/>
+  <meta property="og:image" content="og.png"/>
+  <meta property="og:image:type" content="image/png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="og.png"/>
+  <meta name="theme-color" content="#0ea5e9"/>
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-     window.addEventListener('load', ()=>{
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { display: ['Space Grotesk','ui-sans-serif','system-ui'], body: ['Inter','ui-sans-serif'] },
+          colors: {
+            bg: { dark: '#05080f' },
+            glass: 'rgba(255,255,255,0.06)',
+            brand: { 400:'#2ee6c5', 500:'#0ec7aa' }
+          },
+          boxShadow: {
+            glow: '0 0 30px rgba(34,211,238,.35)',
+            card: '0 12px 40px rgba(0,0,0,.35)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { --ring: 0 0 0 2px rgba(34,211,238,.6); }
+    .glass { background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(10px); }
+    .dot { width:6px;height:6px;border-radius:50%;display:inline-block; }
+    .gradient-text { background: linear-gradient(90deg,#60a5fa,#22d3ee,#34d399,#a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .btn { position:relative; overflow:hidden; }
+    .btn::after { content:''; position:absolute; inset:auto -20% 0; height:120%; transform:translateX(-120%) rotate(8deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent); transition: transform .7s ease; }
+    .btn:hover::after { transform: translateX(120%) rotate(8deg); }
+    .shimmer { background: linear-gradient(110deg, rgba(255,255,255,.08) 8%, rgba(255,255,255,.18) 18%, rgba(255,255,255,.08) 33%); background-size: 200% 100%; animation: shimmer 2.2s linear infinite; }
+    @keyframes shimmer { to { background-position-x: -200%; } }
+    .nav-blur { backdrop-filter: blur(8px); background: rgba(10,15,25,.45); border-bottom: 1px solid rgba(255,255,255,.08) }
+    .tilt { will-change: transform; transform-style: preserve-3d; }
+    .tilt > * { transform: translateZ(24px); }
+
+    /* Background softening */
+    #vanta{opacity:.6;filter:saturate(.7) brightness(.85) contrast(.95)}
+    .bg-overlay{background:
+      radial-gradient(800px 520px at 65% 15%, rgba(8,12,20,.45), transparent 60%),
+      radial-gradient(900px 640px at 10% 60%, rgba(8,12,20,.35), transparent 60%),
+      linear-gradient(180deg, rgba(5,8,15,.65), rgba(5,8,15,.9))}
+    @media (max-width: 768px){#vanta{opacity:.5}}
+    @media (prefers-reduced-motion: reduce){#vanta{opacity:.45;filter:saturate(.6) brightness(.8)}}
+
+    /* Architecture styles */
+    .progress{height:10px;border-radius:9999px;background:rgba(255,255,255,.08);overflow:hidden}
+    .fill{height:100%;border-radius:9999px;box-shadow:0 0 18px rgba(34,211,238,.25);transition:width .6s ease}
+    .fill-upline{background:linear-gradient(90deg,#22d3ee,#60a5fa)}
+    .fill-leader{background:linear-gradient(90deg,#34d399,#22d3ee)}
+    .fill-reserve{background:linear-gradient(90deg,#a78bfa,#60a5fa)}
+    .fill-ops{background:linear-gradient(90deg,#eab308,#22d3ee)}
+    .flow-line{stroke-dasharray:8 14;animation:dash 3s linear infinite}
+    .flow-line.slow{animation-duration:4.5s}
+    @keyframes dash{to{stroke-dashoffset:-180}}
+  </style>
+
+  <!-- Effects libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+</head>
+<body class="bg-bg-dark text-white font-body">
+  <!-- Background -->
+  <div id="vanta" class="fixed inset-0 -z-10"></div>
+  <div id="bgOverlay" class="bg-overlay fixed inset-0 -z-5 pointer-events-none"></div>
+  <script>
+    window.addEventListener('load', ()=>{
       VANTA.NET({ el: '#vanta', color: 0x18a4b9, backgroundColor: 0x05080f, points: 6.0, maxDistance: 16.0, spacing: 22.0, showDots: true });
     })
   </script>
+
   <!-- NAV -->
   <header class="sticky top-0 z-40 nav-blur">
     <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
